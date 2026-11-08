@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Semantic Surface Tokens (Light Mode - Calibrated per color-system.md) -->
+    <color name="bg_canvas">#F5F5F7</color>
+    <color name="bg_surface">#FFFFFF</color>
+    <color name="bg_surface_elevated">#FFFFFF</color>
+    <color name="bg_surface_subtle">#EFEFF4</color>
+    <color name="surface_separator">#E5E5EA</color>
+    <color name="surface_border_strong">#D1D1D6</color>
+    <color name="surface_overlay">#52000000</color>
+
+    <!-- Semantic Content / Typography Tokens (WCAG AA/AAA verified against bg_canvas & bg_surface) -->
+    <color name="text_primary">#1D1D1F</color>      <!-- 17.4:1 on #FFFFFF, 15.8:1 on #F5F5F7 -->
+    <color name="text_secondary">#515154</color>    <!-- 7.8:1 on #FFFFFF, 7.1:1 on #F5F5F7 -->
+    <color name="text_tertiary">#6E6E73</color>     <!-- 5.0:1 on #FFFFFF, 4.6:1 on #F5F5F7 -->
+    <color name="text_inverse">#FFFFFF</color>
+    <color name="text_on_accent">#FFFFFF</color>    <!-- 5.5:1 on #0066CC -->
+
+    <!-- Semantic Accent Tokens (Restrained Single Brand Accent) -->
+    <color name="accent_default">#0066CC</color>
+    <color name="accent_pressed">#0051A8</color>
+    <color name="accent_soft">#E8F1FD</color>
+    <color name="accent_text">#0051A8</color>       <!-- 7.6:1 on #FFFFFF, 6.6:1 on #E8F1FD -->
+    <color name="accent_focus">#0066CC</color>
+
+    <!-- Semantic Status Tokens (Independent of Brand Accent) -->
+    <color name="semantic_success">#1D7A3C</color>
+    <color name="semantic_success_soft">#E6F4EA</color>
+    <color name="semantic_warning">#8A4D00</color>
+    <color name="semantic_warning_soft">#FEF3E2</color>
+    <color name="semantic_danger">#C4271B</color>   <!-- 6.0:1 on #FFFFFF, 5.0:1 on #FCE8E6 -->
+    <color name="semantic_danger_soft">#FCE8E6</color>
+    <color name="semantic_danger_border">#F5C2BE</color>
+    <color name="semantic_disabled_bg">#E5E5EA</color>
+    <color name="semantic_disabled_text">#8E8E93</color>
+
+    <!-- Legacy Material alias mappings to keep theme compatibility -->
+    <color name="primary">@color/accent_default</color>
+    <color name="primary_dark">@color/accent_pressed</color>
+    <color name="primary_container">@color/accent_soft</color>
+    <color name="on_primary_container">@color/accent_text</color>
+    <color name="secondary">@color/text_secondary</color>
+    <color name="secondary_container">@color/bg_surface_subtle</color>
+    <color name="background">@color/bg_canvas</color>
+    <color name="surface">@color/bg_surface</color>
+    <color name="surface_variant">@color/bg_surface_subtle</color>
+    <color name="on_primary">@color/text_on_accent</color>
+    <color name="on_surface">@color/text_primary</color>
+    <color name="on_surface_variant">@color/text_secondary</color>
+    <color name="error">@color/semantic_danger</color>
+    <color name="error_container">@color/semantic_danger_soft</color>
+    <color name="divider">@color/surface_separator</color>
+</resources>
+

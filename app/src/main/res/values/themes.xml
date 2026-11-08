@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.BukuTamuDigital" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent_default</item>
+        <item name="colorOnPrimary">@color/text_on_accent</item>
+        <item name="colorPrimaryContainer">@color/accent_soft</item>
+        <item name="colorOnPrimaryContainer">@color/accent_text</item>
+        <item name="colorSecondary">@color/text_secondary</item>
+        <item name="colorSecondaryContainer">@color/bg_surface_subtle</item>
+        <item name="android:colorBackground">@color/bg_canvas</item>
+        <item name="colorSurface">@color/bg_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/bg_surface_subtle</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorError">@color/semantic_danger</item>
+        <item name="android:statusBarColor">@color/bg_canvas</item>
+        <item name="android:navigationBarColor">@color/bg_canvas</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.BukuTamu.Dialog</item>
+    </style>
+
+    <!-- Semantic Typography Roles (accessibility-content.md: Typography that adapts) -->
+    <style name="TextAppearance.BukuTamu.HeroMetric" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">52sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.LargeTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.SectionHeader" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.BodyPrimary" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.BodySecondary" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.FieldLabel" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.BukuTamu.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <!-- Consistent Control Family Styles (patterns-components.md: Role consistency) -->
+    <style name="Widget.BukuTamu.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_height_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="cornerRadius">@dimen/radius_control</item>
+        <item name="backgroundTint">@color/accent_default</item>
+        <item name="android:textColor">@color/text_on_accent</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.BukuTamu.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">@dimen/button_height_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="cornerRadius">@dimen/radius_control</item>
+        <item name="backgroundTint">@color/bg_surface_subtle</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.BukuTamu.Button.DestructiveQuiet" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="cornerRadius">@dimen/radius_control</item>
+        <item name="android:textColor">@color/semantic_danger</item>
+        <item name="rippleColor">@color/semantic_danger_soft</item>
+    </style>
+
+    <style name="Widget.BukuTamu.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/bg_surface</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_control</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_control</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_control</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_control</item>
+        <item name="boxStrokeColor">@color/accent_default</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintEnabled">false</item>
+        <item name="errorTextColor">@color/semantic_danger</item>
+        <item name="boxStrokeErrorColor">@color/semantic_danger</item>
+    </style>
+
+    <style name="ThemeOverlay.BukuTamu.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/bg_surface_elevated</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorPrimary">@color/accent_text</item>
+    </style>
+
+</resources>
+

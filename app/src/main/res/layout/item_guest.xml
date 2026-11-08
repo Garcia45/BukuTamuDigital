@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp">
+
+        <!-- Inisial Tamu dalam Lingkaran Lembut -->
+        <TextView
+            android:id="@+id/tvGuestInitial"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar_circle"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:textColor="@color/accent_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Prioritas 1: Nama Tamu (Memungkinkan multi-baris saat ukuran teks diperbesar) -->
+        <TextView
+            android:id="@+id/tvGuestName"
+            style="@style/TextAppearance.BukuTamu.BodyPrimary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteGuest"
+            app:layout_constraintStart_toEndOf="@id/tvGuestInitial"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Prioritas 2: Keperluan Kunjungan -->
+        <TextView
+            android:id="@+id/tvGuestPurpose"
+            style="@style/TextAppearance.BukuTamu.BodySecondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/text_primary"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteGuest"
+            app:layout_constraintStart_toEndOf="@id/tvGuestInitial"
+            app:layout_constraintTop_toBottomOf="@id/tvGuestName" />
+
+        <!-- Prioritas 3: Alamat / Instansi -->
+        <TextView
+            android:id="@+id/tvGuestAddress"
+            style="@style/TextAppearance.BukuTamu.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteGuest"
+            app:layout_constraintStart_toEndOf="@id/tvGuestInitial"
+            app:layout_constraintTop_toBottomOf="@id/tvGuestPurpose" />
+
+        <!-- Metadata Waktu Kunjungan Terformat dengan Ikon Pendamping -->
+        <LinearLayout
+            android:id="@+id/layoutTimestampRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteGuest"
+            app:layout_constraintStart_toEndOf="@id/tvGuestInitial"
+            app:layout_constraintTop_toBottomOf="@id/tvGuestAddress">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/tvGuestTimestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/accent_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Aksi Hapus Aksesibel (Target Sentuh 48dp x 48dp, alternatif non-gesture) -->
+        <ImageButton
+            android:id="@+id/btnDeleteGuest"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/btn_delete"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Garis Pemisah Tipis Sejajar Teks (Inset Hairline Divider) -->
+    <View
+        android:id="@+id/dividerBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hairline_stroke"
+        android:layout_marginStart="70dp"
+        android:background="@color/surface_separator" />
+
+</LinearLayout>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Semantic Surface Tokens (Dark Mode Gate - Independently calibrated for hierarchy & contrast) -->
+    <color name="bg_canvas">#000000</color>
+    <color name="bg_surface">#1C1C1E</color>
+    <color name="bg_surface_elevated">#2C2C2E</color>
+    <color name="bg_surface_subtle">#2C2C2E</color>
+    <color name="surface_separator">#38383A</color>
+    <color name="surface_border_strong">#48484A</color>
+    <color name="surface_overlay">#80000000</color>
+
+    <!-- Semantic Content / Typography Tokens (WCAG AA/AAA verified against #000000 & #1C1C1E) -->
+    <color name="text_primary">#F5F5F7</color>      <!-- 15.9:1 on #1C1C1E -->
+    <color name="text_secondary">#AEAEB2</color>    <!-- 7.6:1 on #1C1C1E -->
+    <color name="text_tertiary">#8E8E93</color>     <!-- 4.9:1 on #1C1C1E -->
+    <color name="text_inverse">#1D1D1F</color>
+    <color name="text_on_accent">#FFFFFF</color>    <!-- 5.5:1 on #0066CC -->
+
+    <!-- Semantic Accent Tokens -->
+    <color name="accent_default">#0066CC</color>
+    <color name="accent_pressed">#2E8CFF</color>
+    <color name="accent_soft">#132A46</color>
+    <color name="accent_text">#66B2FF</color>       <!-- 7.8:1 on #1C1C1E, 6.1:1 on #132A46 -->
+    <color name="accent_focus">#409CFF</color>
+
+    <!-- Semantic Status Tokens -->
+    <color name="semantic_success">#4CD964</color>
+    <color name="semantic_success_soft">#13311C</color>
+    <color name="semantic_warning">#FFD60A</color>
+    <color name="semantic_warning_soft">#332900</color>
+    <color name="semantic_danger">#FF6961</color>   <!-- 5.9:1 on #1C1C1E, 4.8:1 on #3A1817 -->
+    <color name="semantic_danger_soft">#3A1817</color>
+    <color name="semantic_danger_border">#692927</color>
+    <color name="semantic_disabled_bg">#2C2C2E</color>
+    <color name="semantic_disabled_text">#636366</color>
+
+    <!-- Legacy Material alias mappings -->
+    <color name="primary">@color/accent_default</color>
+    <color name="primary_dark">@color/accent_pressed</color>
+    <color name="primary_container">@color/accent_soft</color>
+    <color name="on_primary_container">@color/accent_text</color>
+    <color name="secondary">@color/text_secondary</color>
+    <color name="secondary_container">@color/bg_surface_subtle</color>
+    <color name="background">@color/bg_canvas</color>
+    <color name="surface">@color/bg_surface</color>
+    <color name="surface_variant">@color/bg_surface_subtle</color>
+    <color name="on_primary">@color/text_on_accent</color>
+    <color name="on_surface">@color/text_primary</color>
+    <color name="on_surface_variant">@color/text_secondary</color>
+    <color name="error">@color/semantic_danger</color>
+    <color name="error_container">@color/semantic_danger_soft</color>
+    <color name="divider">@color/surface_separator</color>
+</resources>
+

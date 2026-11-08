@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_canvas">
+
+    <!-- Header & Search Chrome yang Stabil (motion.md: Keep navigation chrome stable) -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_surface"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_surface"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:subtitleTextAppearance="@style/TextAppearance.BukuTamu.Caption"
+            app:subtitleTextColor="@color/text_secondary"
+            app:title="@string/title_guest_list"
+            app:titleTextAppearance="@style/TextAppearance.BukuTamu.Title"
+            app:titleTextColor="@color/text_primary" />
+
+        <!-- Kolom Pencarian Nama Tamu (FR-23) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginHorizontal="@dimen/page_horizontal_padding"
+            android:background="@drawable/bg_search_field"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="4dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_search" />
+
+            <EditText
+                android:id="@+id/etSearchGuest"
+                style="@style/TextAppearance.BukuTamu.BodySecondary"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/hint_search_guest"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary" />
+
+            <ImageButton
+                android:id="@+id/btnClearSearch"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cd_clear_search"
+                android:src="@drawable/ic_close_circle"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/headerDivider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/hairline_stroke"
+        android:background="@color/surface_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer" />
+
+    <!-- Daftar Tamu dalam Permukaan Terkelompok (Menghindari Card Soup) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGuests"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/page_horizontal_padding"
+        android:layout_marginTop="@dimen/space_4"
+        android:layout_marginBottom="@dimen/space_4"
+        android:background="@drawable/bg_grouped_panel"
+        android:clipToPadding="false"
+        android:paddingTop="4dp"
+        android:paddingBottom="88dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerDivider"
+        app:layout_constraintWidth_max="@dimen/content_max_width" />
+
+    <!-- Empty State & No Search Result State (FR-17) -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyState"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/page_horizontal_padding"
+        android:background="@drawable/bg_grouped_panel"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/space_6"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerDivider"
+        app:layout_constraintWidth_max="@dimen/content_max_width">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_empty_guest" />
+
+        <TextView
+            android:id="@+id/tvEmptyStateTitle"
+            style="@style/TextAppearance.BukuTamu.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:gravity="center"
+            android:text="@string/empty_guest_list_title" />
+
+        <TextView
+            android:id="@+id/tvEmptyState"
+            style="@style/TextAppearance.BukuTamu.BodySecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:gravity="center"
+            android:text="@string/empty_guest_list" />
+
+    </LinearLayout>
+
+    <!-- Tombol Aksi Tambah Tamu yang Terjangkau (FR-11, FR-18) -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddGuest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_5"
+        android:contentDescription="@string/btn_add_guest"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/btn_add_guest"
+        android:textColor="@color/text_on_accent"
+        android:textStyle="bold"
+        app:backgroundTint="@color/accent_default"
+        app:elevation="3dp"
+        app:icon="@drawable/ic_add"
+        app:iconTint="@color/text_on_accent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

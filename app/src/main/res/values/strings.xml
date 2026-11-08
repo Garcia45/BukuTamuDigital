@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Buku Tamu Digital</string>
+    <string name="subtitle_app">Pencatatan Kunjungan Lokal &amp; Privat</string>
+    <string name="badge_offline_private">Tersimpan Lokal di Perangkat</string>
+
+    <!-- Auth (Login & Register) - Concrete labels & actionable errors without exclamation marks -->
+    <string name="title_login">Masuk ke Buku Tamu</string>
+    <string name="subtitle_login">Gunakan akun petugas untuk membuka catatan kunjungan Anda.</string>
+    <string name="title_register">Buat Akun Petugas</string>
+    <string name="subtitle_register">Setiap akun memiliki ruang data tamu yang terpisah secara privat.</string>
+    <string name="label_username">Username</string>
+    <string name="placeholder_username">Masukkan username petugas</string>
+    <string name="label_password">Password</string>
+    <string name="placeholder_password">Masukkan password</string>
+    <string name="placeholder_password_min">Minimal 6 karakter</string>
+    <string name="label_confirm_password">Konfirmasi Password</string>
+    <string name="placeholder_confirm_password">Ketik ulang password yang sama</string>
+    <string name="btn_login">Masuk</string>
+    <string name="btn_register">Buat Akun</string>
+    <string name="link_to_register">Belum memiliki akun? Buat akun baru</string>
+    <string name="link_to_login">Sudah memiliki akun? Masuk</string>
+    <string name="error_Invalid_credentials">Username atau password salah. Periksa kembali lalu coba lagi.</string>
+    <string name="error_username_taken">Username sudah digunakan. Pilih username lain.</string>
+    <string name="error_field_required">Kolom ini wajib diisi</string>
+    <string name="error_password_min_length">Password minimal terdiri dari 6 karakter</string>
+    <string name="error_password_mismatch">Konfirmasi password belum cocok dengan password di atas</string>
+    <string name="msg_register_success">Akun berhasil dibuat. Silakan masuk dengan akun Anda.</string>
+
+    <!-- Dashboard -->
+    <string name="title_dashboard">Ringkasan Kunjungan</string>
+    <string name="greeting_user">Halo, %1$s</string>
+    <string name="subtitle_greeting">Buku tamu aktif dan tersimpan secara lokal di perangkat ini.</string>
+    <string name="label_today_guests">Tamu Hari Ini</string>
+    <string name="label_today_subtitle">Rentang pukul 00:00 – 23:59 waktu perangkat</string>
+    <string name="label_total_guests">Total Seluruh Kunjungan</string>
+    <string name="value_guest_count">%1$d tamu</string>
+    <string name="section_quick_actions">Tindakan &amp; Data</string>
+    <string name="btn_add_guest">Catat Tamu Baru</string>
+    <string name="btn_view_guest_list">Daftar &amp; Pencarian Tamu</string>
+    <string name="subtitle_view_guest_list">Lihat, cari, ubah, atau hapus catatan kunjungan</string>
+    <string name="section_daily_history">Riwayat Rekap Harian</string>
+    <string name="empty_daily_history">Belum ada riwayat kunjungan pada akun ini.</string>
+    <string name="btn_logout">Keluar</string>
+    <string name="dialog_logout_title">Keluar dari Akun?</string>
+    <string name="dialog_logout_message">Sesi Anda akan ditutup. Data tamu tetap tersimpan aman di perangkat ini.</string>
+
+    <!-- Guest List & Search -->
+    <string name="title_guest_list">Daftar Tamu</string>
+    <string name="subtitle_guest_count">%1$d catatan kunjungan</string>
+    <string name="hint_search_guest">Cari nama tamu</string>
+    <string name="cd_clear_search">Bersihkan pencarian</string>
+    <string name="empty_guest_list_title">Belum Ada Catatan Tamu</string>
+    <string name="empty_guest_list">Ketuk tombol Catat Tamu Baru untuk menambahkan kunjungan pertama pada akun ini.</string>
+    <string name="empty_search_result_title">Tamu Tidak Ditemukan</string>
+    <string name="empty_search_result">Tidak ada nama tamu yang cocok dengan kata kunci pencarian Anda.</string>
+
+    <!-- Guest Form (Add & Edit) -->
+    <string name="title_add_guest">Catat Tamu Baru</string>
+    <string name="title_edit_guest">Detail &amp; Edit Tamu</string>
+    <string name="subtitle_form_add">Waktu kunjungan akan dicatat otomatis saat data disimpan.</string>
+    <string name="subtitle_form_edit">Perubahan akan diperbarui tanpa mengubah waktu kunjungan asli.</string>
+    <string name="section_guest_identity">Informasi Tamu</string>
+    <string name="label_guest_name">Nama Lengkap</string>
+    <string name="placeholder_guest_name">Contoh: Budi Santoso</string>
+    <string name="label_guest_address">Alamat / Instansi Asal</string>
+    <string name="placeholder_guest_address">Contoh: Dinas Pendidikan Kota Bandung</string>
+    <string name="label_guest_purpose">Keperluan Kunjungan</string>
+    <string name="placeholder_guest_purpose">Contoh: Koordinasi kegiatan akademik semester ganjil</string>
+    <string name="label_visit_time">Waktu Kunjungan Tercatat: %1$s</string>
+    <string name="btn_save">Simpan Catatan</string>
+    <string name="btn_save_changes">Simpan Perubahan</string>
+    <string name="btn_cancel">Batal</string>
+    <string name="btn_delete">Hapus Catatan Ini</string>
+    <string name="btn_yes">Hapus</string>
+    <string name="btn_no">Batal</string>
+    <string name="dialog_delete_title">Hapus Catatan Tamu?</string>
+    <string name="dialog_delete_message">Yakin ingin menghapus catatan kunjungan ini? Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="dialog_discard_title">Buang Perubahan?</string>
+    <string name="dialog_discard_message">Anda memiliki perubahan yang belum disimpan. Jika keluar sekarang, perubahan tersebut akan hilang.</string>
+    <string name="btn_discard">Buang</string>
+    <string name="btn_keep_editing">Lanjut Mengisi</string>
+    <string name="msg_guest_saved">Catatan tamu berhasil disimpan.</string>
+    <string name="msg_guest_updated">Catatan tamu berhasil diperbarui.</string>
+    <string name="msg_guest_deleted">Catatan tamu telah dihapus.</string>
+    <string name="error_unauthorized_action">Akses ditolak: Data ini bukan milik akun yang sedang aktif.</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Calibrated Spacing Scale (tokens.json: 4, 8, 12, 16, 24, 32, 48) -->
+    <dimen name="space_1">4dp</dimen>
+    <dimen name="space_2">8dp</dimen>
+    <dimen name="space_3">12dp</dimen>
+    <dimen name="space_4">16dp</dimen>
+    <dimen name="space_5">24dp</dimen>
+    <dimen name="space_6">32dp</dimen>
+    <dimen name="space_7">48dp</dimen>
+
+    <!-- Page & Surface Padding -->
+    <dimen name="page_horizontal_padding">20dp</dimen>
+    <dimen name="page_vertical_padding">24dp</dimen>
+    <dimen name="panel_inner_padding">20dp</dimen>
+
+    <!-- Corner Radius Tokens (control: 12dp, panel: 20dp, pill: 999dp) -->
+    <dimen name="radius_control">12dp</dimen>
+    <dimen name="radius_panel">20dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+
+    <!-- Touch Target & Hairline -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="button_height_primary">52dp</dimen>
+    <dimen name="hairline_stroke">1dp</dimen>
+
+    <!-- Responsive Reading / Form Max Width -->
+    <dimen name="content_max_width">540dp</dimen>
+</resources>
+

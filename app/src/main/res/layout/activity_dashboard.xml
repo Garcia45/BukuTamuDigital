@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_canvas"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/page_horizontal_padding"
+        android:paddingVertical="@dimen/page_vertical_padding">
+
+        <LinearLayout
+            android:id="@+id/layoutDashboardContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/content_max_width">
+
+            <!-- Baris Atas: Konteks Sesi & Aksi Keluar yang Tenang (Quiet Destructive Action) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvAppHeader"
+                    style="@style/TextAppearance.BukuTamu.SectionHeader"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:text="@string/title_dashboard"
+                    app:layout_constraintEnd_toStartOf="@id/btnLogout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvGreeting"
+                    style="@style/TextAppearance.BukuTamu.LargeTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:text="@string/greeting_user"
+                    app:layout_constraintEnd_toStartOf="@id/btnLogout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAppHeader" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogout"
+                    style="@style/Widget.BukuTamu.Button.DestructiveQuiet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_logout"
+                    app:icon="@drawable/ic_logout"
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    app:iconTint="@color/semantic_danger"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tvGreetingSubtitle"
+                style="@style/TextAppearance.BukuTamu.BodySecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_1"
+                android:text="@string/subtitle_greeting" />
+
+            <!-- Satu Permukaan Metrik Utama & Pendukung (Decision density: One primary insight first) -->
+            <LinearLayout
+                android:id="@+id/cardTodayRecap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_5"
+                android:background="@drawable/bg_grouped_panel"
+                android:orientation="vertical">
+
+                <!-- Fokus Utama: Rekap Tamu Hari Ini (FR-10, FR-24, FR-25) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/panel_inner_padding"
+                    android:paddingTop="@dimen/space_5"
+                    android:paddingBottom="@dimen/space_4">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_badge"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_clock" />
+
+                        <TextView
+                            android:id="@+id/tvTodayLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/label_today_guests"
+                            android:textColor="@color/accent_text"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvTodayCount"
+                        style="@style/TextAppearance.BukuTamu.HeroMetric"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/tvTodaySubtitle"
+                        style="@style/TextAppearance.BukuTamu.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_1"
+                        android:text="@string/label_today_subtitle" />
+                </LinearLayout>
+
+                <!-- Garis Pemisah Tipis (Hairline Separator) -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hairline_stroke"
+                    android:background="@color/surface_separator" />
+
+                <!-- Metrik Pendukung Tenang dalam Panel yang Sama: Total Kunjungan (FR-13) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/panel_inner_padding"
+                    android:paddingVertical="@dimen/space_3">
+
+                    <TextView
+                        style="@style/TextAppearance.BukuTamu.BodySecondary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_total_guests" />
+
+                    <TextView
+                        android:id="@+id/tvTotalCount"
+                        style="@style/TextAppearance.BukuTamu.FieldLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 tamu" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Tindakan Utama & Navigasi Terkelompok (FR-11) -->
+            <TextView
+                style="@style/TextAppearance.BukuTamu.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_5"
+                android:layout_marginBottom="@dimen/space_2"
+                android:text="@string/section_quick_actions" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddGuest"
+                style="@style/Widget.BukuTamu.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_add_guest"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_on_accent" />
+
+            <!-- Baris Navigasi Terkelompok ke Daftar Tamu (Summary to Source Records) -->
+            <LinearLayout
+                android:id="@+id/btnViewGuestList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:background="@drawable/bg_interactive_panel"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="64dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/panel_inner_padding"
+                android:paddingVertical="@dimen/space_3">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.BukuTamu.BodyPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/btn_view_guest_list"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        style="@style/TextAppearance.BukuTamu.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/subtitle_view_guest_list" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="@dimen/space_2"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right" />
+
+            </LinearLayout>
+
+            <!-- Bagian Riwayat Rekap Harian dalam Satu Panel Terkelompok (FR-26) -->
+            <TextView
+                style="@style/TextAppearance.BukuTamu.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_5"
+                android:layout_marginBottom="@dimen/space_2"
+                android:text="@string/section_daily_history" />
+
+            <LinearLayout
+                android:id="@+id/panelDailyHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_grouped_panel"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvEmptyDailyHistory"
+                    style="@style/TextAppearance.BukuTamu.BodySecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/panel_inner_padding"
+                    android:text="@string/empty_daily_history" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDailyRecap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+
