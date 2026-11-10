@@ -20,12 +20,13 @@ import com.kelompok3.bukutamu.databinding.ActivityGuestListBinding
 import com.kelompok3.bukutamu.ui.auth.LoginActivity
 import com.kelompok3.bukutamu.ui.viewmodel.GuestViewModel
 import com.kelompok3.bukutamu.util.SessionManager
+import com.kelompok3.bukutamu.util.WindowInsetsHelper
 import kotlinx.coroutines.launch
 
 /**
  * Layar Daftar Tamu sesuai PRD 11.4 & FR-14 s.d. FR-17, FR-21, FR-22, FR-23.
- * Menyajikan daftar tamu dalam permukaan terkelompok (grouped surface), pencarian real-time,
- * sinkronisasi status kosong vs pencarian tidak ditemukan, serta konfirmasi hapus eksplisit.
+ * Menyajikan header dengan Safe-Area Status Bar Inset, pencarian real-time,
+ * kartu baris terkelompok dinamis (mengikuti jumlah item sebenarnya), dan Bottom Docked Action Bar.
  */
 class GuestListActivity : AppCompatActivity() {
 
@@ -53,10 +54,19 @@ class GuestListActivity : AppCompatActivity() {
         binding = ActivityGuestListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        WindowInsetsHelper.applyEdgeToEdgeInsets(
+            activity = this,
+            rootView = binding.layoutGuestListRoot,
+            topBar = binding.headerContainer,
+            bottomView = binding.bottomListBar,
+            extraTopDp = 6,
+            extraBottomDp = 12
+        )
+
         setupToolbar()
         setupSearchInput()
         setupRecyclerView()
-        setupFab()
+        setupBottomAction()
         observeGuestList()
     }
 
@@ -104,7 +114,7 @@ class GuestListActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupFab() {
+    private fun setupBottomAction() {
         binding.fabAddGuest.setOnClickListener {
             val intent = Intent(this, GuestFormActivity::class.java)
             startActivity(intent)
@@ -112,12 +122,10 @@ class GuestListActivity : AppCompatActivity() {
     }
 
     private fun observeGuestList() {
-        // FR-14, FR-16, FR-17, FR-22: Observasi Flow daftar tamu & sinkronisasi dengan state pencarian
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.guests.collect { guestList ->
                     guestAdapter.submitList(guestList) {
-                        // Pastikan garis pemisah item terakhir diperbarui saat daftar berubah
                         if (guestList.isNotEmpty()) {
                             guestAdapter.notifyItemRangeChanged(0, guestList.size)
                         }
@@ -145,9 +153,6 @@ class GuestListActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * FR-21: Dialog konfirmasi sebelum menghapus data tamu.
-     */
     private fun showDeleteConfirmationDialog(guest: Guest) {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.dialog_delete_title))
@@ -185,4 +190,3 @@ class GuestListActivity : AppCompatActivity() {
         finish()
     }
 }
-

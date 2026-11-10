@@ -21,13 +21,13 @@ import com.kelompok3.bukutamu.ui.viewmodel.GuestViewModel
 import com.kelompok3.bukutamu.util.DateUtils
 import com.kelompok3.bukutamu.util.MotionUtils
 import com.kelompok3.bukutamu.util.SessionManager
+import com.kelompok3.bukutamu.util.WindowInsetsHelper
 import kotlinx.coroutines.launch
 
 /**
  * Layar Form Tambah dan Edit Tamu sesuai PRD 11.5 & FR-18 s.d. FR-22.
- * Dipakai ulang untuk mode Tambah dan mode Edit.
- * Menerapkan perlindungan terhadap perubahan yang belum disimpan (Modality & Return Paths - patterns-components.md),
- * menjaga input saat rotasi layar (AC-14), dan mempertahankan timestamp asli saat edit (FR-20).
+ * Menerapkan Top App Bar dengan Safe-Area Status Bar Inset, Scrollable Form Body di tengah,
+ * serta Bottom Docked Action Bar (Batal & Simpan) yang mengikuti inset Navigation Bar & Keyboard IME.
  */
 class GuestFormActivity : AppCompatActivity() {
 
@@ -65,6 +65,15 @@ class GuestFormActivity : AppCompatActivity() {
 
         binding = ActivityGuestFormBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowInsetsHelper.applyEdgeToEdgeInsets(
+            activity = this,
+            rootView = binding.layoutFormRoot,
+            topBar = binding.headerContainer,
+            bottomView = binding.bottomFormBar,
+            extraTopDp = 6,
+            extraBottomDp = 12
+        )
 
         guestId = intent.getIntExtra(EXTRA_GUEST_ID, INVALID_GUEST_ID)
         isInitialDataPopulated = savedInstanceState?.getBoolean(KEY_INITIAL_DATA_POPULATED, false) ?: false
@@ -151,10 +160,6 @@ class GuestFormActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Melindungi pengguna dari kehilangan input secara tidak sengaja saat menekan tombol Kembali atau Batal
-     * (patterns-components.md: Modality and return paths).
-     */
     private fun setupBackNavigationProtection() {
         onBackPressedDispatcher.addCallback(
             this,
@@ -199,14 +204,12 @@ class GuestFormActivity : AppCompatActivity() {
                 launch {
                     viewModel.loadedGuest.collect { guest ->
                         if (guest != null) {
-                            // Waktu kunjungan ditampilkan sebagai teks read-only pada mode edit (PRD 11.5)
                             binding.tvVisitTimeInfo.text = getString(
                                 R.string.label_visit_time,
                                 DateUtils.formatTimestamp(guest.timestamp)
                             )
                             binding.layoutVisitTimeBanner.visibility = View.VISIBLE
 
-                            // Hanya isi field teks saat pertama kali dibuka agar perubahan saat rotasi layar tidak hilang
                             if (!isInitialDataPopulated) {
                                 baselineNama = guest.nama.trim()
                                 baselineAlamat = guest.alamat.trim()
@@ -314,4 +317,3 @@ class GuestFormActivity : AppCompatActivity() {
         private const val KEY_BASELINE_KEPERLUAN = "key_baseline_keperluan"
     }
 }
-

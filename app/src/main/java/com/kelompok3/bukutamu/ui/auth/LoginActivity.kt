@@ -17,11 +17,12 @@ import com.kelompok3.bukutamu.ui.dashboard.DashboardActivity
 import com.kelompok3.bukutamu.ui.viewmodel.AuthViewModel
 import com.kelompok3.bukutamu.util.MotionUtils
 import com.kelompok3.bukutamu.util.SessionManager
+import com.kelompok3.bukutamu.util.WindowInsetsHelper
 import kotlinx.coroutines.launch
 
 /**
  * Layar Login dan pengecekan sesi awal aplikasi sesuai PRD 11.1 & FR-04 s.d. FR-08.
- * Menerapkan permukaan terkelompok tenang, label persisten, dan banner status berikon.
+ * Menangani WindowInsets (Status Bar, Navigation Bar, & Keyboard IME) serta pemusatan proporsional.
  */
 class LoginActivity : AppCompatActivity() {
 
@@ -46,6 +47,15 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowInsetsHelper.applyEdgeToEdgeInsets(
+            activity = this,
+            rootView = binding.scrollLogin,
+            topBar = binding.layoutLoginRoot,
+            bottomView = binding.layoutLoginRoot,
+            extraTopDp = 16,
+            extraBottomDp = 20
+        )
 
         if (savedInstanceState == null) {
             MotionUtils.animateSurfaceEntry(binding.containerLoginContent)
@@ -142,4 +152,3 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 }
-

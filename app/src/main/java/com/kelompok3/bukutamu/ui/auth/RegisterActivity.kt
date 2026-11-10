@@ -16,11 +16,12 @@ import com.kelompok3.bukutamu.data.repository.AuthRepository
 import com.kelompok3.bukutamu.databinding.ActivityRegisterBinding
 import com.kelompok3.bukutamu.ui.viewmodel.AuthViewModel
 import com.kelompok3.bukutamu.util.MotionUtils
+import com.kelompok3.bukutamu.util.WindowInsetsHelper
 import kotlinx.coroutines.launch
 
 /**
  * Layar Register akun baru sesuai PRD 11.2 & FR-01 s.d. FR-03.
- * Menerapkan permukaan form terkelompok, label persisten, dan validasi yang jelas.
+ * Menangani WindowInsets (Status Bar, Navigation Bar, & Keyboard IME) dengan header stabil.
  */
 class RegisterActivity : AppCompatActivity() {
 
@@ -35,6 +36,15 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowInsetsHelper.applyEdgeToEdgeInsets(
+            activity = this,
+            rootView = binding.layoutRegisterRoot,
+            topBar = binding.headerRegisterBar,
+            bottomView = binding.scrollRegister,
+            extraTopDp = 6,
+            extraBottomDp = 20
+        )
 
         if (savedInstanceState == null) {
             MotionUtils.animateSurfaceEntry(binding.containerRegisterContent)
@@ -134,4 +144,3 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnBackToLogin.isEnabled = !isLoading
     }
 }
-

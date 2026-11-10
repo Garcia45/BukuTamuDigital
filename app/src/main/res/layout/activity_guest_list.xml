@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutGuestListRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_canvas">
 
-    <!-- Header & Search Chrome yang Stabil (motion.md: Keep navigation chrome stable) -->
+    <!-- Header & Search Chrome Stabil dengan Safe-Area Status Bar Inset -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
@@ -32,12 +33,13 @@
         <!-- Kolom Pencarian Nama Tamu (FR-23) -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="46dp"
             android:layout_marginHorizontal="@dimen/page_horizontal_padding"
+            android:layout_marginTop="4dp"
             android:background="@drawable/bg_search_field"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="12dp"
+            android:paddingStart="14dp"
             android:paddingEnd="4dp">
 
             <ImageView
@@ -51,7 +53,7 @@
                 style="@style/TextAppearance.BukuTamu.BodySecondary"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="@string/hint_search_guest"
@@ -83,25 +85,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerContainer" />
 
-    <!-- Daftar Tamu dalam Permukaan Terkelompok (Menghindari Card Soup) -->
+    <!-- Daftar Tamu: Tinggi item mengikuti jumlah data sebenarnya (tidak menarik kotak kosong ke bawah) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGuests"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/page_horizontal_padding"
-        android:layout_marginTop="@dimen/space_4"
-        android:layout_marginBottom="@dimen/space_4"
-        android:background="@drawable/bg_grouped_panel"
         android:clipToPadding="false"
-        android:paddingTop="4dp"
-        android:paddingBottom="88dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingHorizontal="@dimen/page_horizontal_padding"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomListDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerDivider"
         app:layout_constraintWidth_max="@dimen/content_max_width" />
 
-    <!-- Empty State & No Search Result State (FR-17) -->
+    <!-- Empty State & No Search Result State yang Terpusat Secara Proporsional (FR-17) -->
     <LinearLayout
         android:id="@+id/layoutEmptyState"
         android:layout_width="0dp"
@@ -112,7 +111,7 @@
         android:orientation="vertical"
         android:padding="@dimen/space_6"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomListDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerDivider"
@@ -144,23 +143,42 @@
 
     </LinearLayout>
 
-    <!-- Tombol Aksi Tambah Tamu yang Terjangkau (FR-11, FR-18) -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabAddGuest"
-        android:layout_width="wrap_content"
+    <!-- Bottom Docked Action Bar untuk Catat Tamu Baru -->
+    <View
+        android:id="@+id/bottomListDivider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/hairline_stroke"
+        android:background="@color/surface_separator"
+        app:layout_constraintBottom_toTopOf="@id/bottomListBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/bottomListBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_5"
-        android:contentDescription="@string/btn_add_guest"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/btn_add_guest"
-        android:textColor="@color/text_on_accent"
-        android:textStyle="bold"
-        app:backgroundTint="@color/accent_default"
-        app:elevation="3dp"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/text_on_accent"
+        android:background="@color/bg_surface"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/page_horizontal_padding"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fabAddGuest"
+            style="@style/Widget.BukuTamu.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/content_max_width"
+            android:text="@string/btn_add_guest"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/text_on_accent" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

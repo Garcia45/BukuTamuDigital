@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kelompok3.bukutamu.R
 import com.kelompok3.bukutamu.data.entity.Guest
 import com.kelompok3.bukutamu.databinding.ItemGuestBinding
 import com.kelompok3.bukutamu.util.DateUtils
@@ -13,8 +14,8 @@ import java.util.Locale
 
 /**
  * Adapter RecyclerView untuk menampilkan daftar tamu sesuai PRD 8.3 (FR-14, FR-15) & 11.4.
- * Menggunakan pola baris terkelompok dengan garis pemisah tipis (inset hairline divider)
- * untuk menghindari anti-pattern "Card Soup" dan mempercepat pemindaian informasi.
+ * Menggunakan latar permukaan terkelompok yang menyesuaikan posisi item (single, top, middle, bottom)
+ * sehingga kartu daftar tamu membungkus jumlah item sebenarnya secara presisi tanpa menyisakan ruang kosong.
  */
 class GuestAdapter(
     private val onItemClick: (Guest) -> Unit,
@@ -31,22 +32,28 @@ class GuestAdapter(
     }
 
     override fun onBindViewHolder(holder: GuestViewHolder, position: Int) {
-        val isLastItem = position == itemCount - 1
-        holder.bind(getItem(position), isLastItem)
+        holder.bind(getItem(position), position, itemCount)
     }
 
     inner class GuestViewHolder(
         private val binding: ItemGuestBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(guest: Guest, isLastItem: Boolean) {
+        fun bind(guest: Guest, position: Int, totalCount: Int) {
             binding.tvGuestInitial.text = extractInitials(guest.nama)
             binding.tvGuestName.text = guest.nama
             binding.tvGuestPurpose.text = guest.keperluan
             binding.tvGuestAddress.text = guest.alamat
             binding.tvGuestTimestamp.text = DateUtils.formatTimestamp(guest.timestamp)
 
-            // Sembunyikan garis pemisah pada item paling bawah di dalam permukaan terkelompok
+            val isLastItem = position == totalCount - 1
+            val bgRes = when {
+                totalCount <= 1 -> R.drawable.bg_grouped_row_single
+                position == 0 -> R.drawable.bg_grouped_row_top
+                isLastItem -> R.drawable.bg_grouped_row_bottom
+                else -> R.drawable.bg_grouped_row_middle
+            }
+            binding.root.setBackgroundResource(bgRes)
             binding.dividerBottom.visibility = if (isLastItem) View.GONE else View.VISIBLE
 
             // Ketuk baris membuka Form Edit (FR-20, PRD 11.4)
@@ -86,4 +93,3 @@ class GuestAdapter(
         }
     }
 }
-

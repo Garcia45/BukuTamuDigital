@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_canvas"
+    android:clipToPadding="false"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutLoginRoot"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingHorizontal="@dimen/page_horizontal_padding"
         android:paddingVertical="@dimen/page_vertical_padding">
 
@@ -22,9 +24,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45"
             app:layout_constraintWidth_max="@dimen/content_max_width">
 
-            <!-- Pill Status Privasi Lokal (core-principles.md: Responsibility) -->
+            <!-- Pill Status Privasi Lokal -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,7 +72,7 @@
                 android:layout_marginBottom="@dimen/space_5"
                 android:text="@string/subtitle_login" />
 
-            <!-- Permukaan Form Terkelompok (Grouped Surface, bukan Card Soup) -->
+            <!-- Permukaan Form Terkelompok -->
             <LinearLayout
                 android:id="@+id/cardLogin"
                 android:layout_width="match_parent"
@@ -78,7 +81,6 @@
                 android:orientation="vertical"
                 android:padding="@dimen/panel_inner_padding">
 
-                <!-- Banner Status Error dengan Ikon + Teks (tidak mengandalkan warna saja) -->
                 <LinearLayout
                     android:id="@+id/layoutErrorBanner"
                     android:layout_width="match_parent"
@@ -106,7 +108,6 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <!-- Persistent Associated Label: Username -->
                 <TextView
                     android:id="@+id/tvLabelUsername"
                     style="@style/TextAppearance.BukuTamu.FieldLabel"
@@ -136,7 +137,6 @@
                         android:textColorHint="@color/text_tertiary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Persistent Associated Label: Password -->
                 <TextView
                     android:id="@+id/tvLabelPassword"
                     style="@style/TextAppearance.BukuTamu.FieldLabel"
@@ -188,7 +188,6 @@
 
             </LinearLayout>
 
-            <!-- Navigasi Sekunder ke Register -->
             <TextView
                 android:id="@+id/tvGoToRegister"
                 android:layout_width="match_parent"
@@ -209,5 +208,4 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
-
+</androidx.core.widget.NestedScrollView>

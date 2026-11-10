@@ -20,13 +20,15 @@ import com.kelompok3.bukutamu.ui.guest.GuestListActivity
 import com.kelompok3.bukutamu.ui.viewmodel.GuestViewModel
 import com.kelompok3.bukutamu.util.MotionUtils
 import com.kelompok3.bukutamu.util.SessionManager
+import com.kelompok3.bukutamu.util.WindowInsetsHelper
 import kotlinx.coroutines.launch
 
 /**
  * Layar Dashboard sesuai PRD 11.3 & FR-09 s.d. FR-13, FR-24 s.d. FR-26.
- * Menerapkan pola Decision Density pada permukaan operasional (patterns-components.md):
- * satu metrik utama ("Tamu Hari Ini") yang menonjol, ringkasan total yang tenang dalam panel yang sama,
- * satu aksi utama ("Catat Tamu Baru"), dan baris navigasi terkelompok.
+ * Menerapkan komposisi mobile proporsional:
+ * - Top Header Bar terpisah dari Status Bar (WindowInsets)
+ * - Scrollable Body (Hero Metric Card, Menu Navigasi, & Riwayat Rekap Harian)
+ * - Bottom Docked Primary Action Bar ("+ Catat Tamu Baru") di area jangkauan ibu jari bawah.
  */
 class DashboardActivity : AppCompatActivity() {
 
@@ -53,6 +55,15 @@ class DashboardActivity : AppCompatActivity() {
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowInsetsHelper.applyEdgeToEdgeInsets(
+            activity = this,
+            rootView = binding.layoutDashboardRoot,
+            topBar = binding.topHeaderBar,
+            bottomView = binding.bottomActionBar,
+            extraTopDp = 10,
+            extraBottomDp = 12
+        )
 
         if (savedInstanceState == null) {
             MotionUtils.animateSurfaceEntry(binding.layoutDashboardContainer)
@@ -100,7 +111,7 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // FR-08 & FR-12: Tombol Keluar dengan konfirmasi eksplisit agar konsekuensi keluar sesi jelas
+        // FR-08 & FR-12: Tombol Keluar dengan konfirmasi eksplisit
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmationDialog()
         }
@@ -135,10 +146,10 @@ class DashboardActivity : AppCompatActivity() {
                     viewModel.dailyRecapHistory.collect { history ->
                         dailyRecapAdapter.submitList(history)
                         if (history.isEmpty()) {
-                            binding.tvEmptyDailyHistory.visibility = View.VISIBLE
+                            binding.layoutEmptyDailyHistory.visibility = View.VISIBLE
                             binding.rvDailyRecap.visibility = View.GONE
                         } else {
-                            binding.tvEmptyDailyHistory.visibility = View.GONE
+                            binding.layoutEmptyDailyHistory.visibility = View.GONE
                             binding.rvDailyRecap.visibility = View.VISIBLE
                         }
                     }
@@ -170,4 +181,3 @@ class DashboardActivity : AppCompatActivity() {
         finish()
     }
 }
-
