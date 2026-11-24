@@ -7,11 +7,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Entity untuk tabel guests sesuai PRD 7.2 & 7.4.
- * Memiliki relasi ForeignKey ke User.id dengan onDelete = CASCADE dan index pada user_id.
+ * Entity untuk tabel guests_187 (NIM 187) sesuai PRD 7.2 & 7.4.
+ * Memiliki relasi ForeignKey ke User.id (users_187) dengan onDelete = CASCADE dan index pada user_id.
  */
 @Entity(
-    tableName = "guests",
+    tableName = "guests_187",
     foreignKeys = [
         ForeignKey(
             entity = User::class,
@@ -30,4 +30,3 @@ data class Guest(
     val keperluan: String,
     val timestamp: Long = System.currentTimeMillis()
 )
-

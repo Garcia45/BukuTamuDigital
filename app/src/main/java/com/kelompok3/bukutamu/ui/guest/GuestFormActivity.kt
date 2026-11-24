@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kelompok3.bukutamu.R
 import com.kelompok3.bukutamu.data.AppDatabase
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiClient
 import com.kelompok3.bukutamu.data.repository.GuestRepository
 import com.kelompok3.bukutamu.databinding.ActivityGuestFormBinding
 import com.kelompok3.bukutamu.ui.auth.LoginActivity
@@ -49,7 +50,7 @@ class GuestFormActivity : AppCompatActivity() {
     private val viewModel: GuestViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
         GuestViewModel.Factory(
-            guestRepository = GuestRepository(db.guestDao()),
+            guestRepository = GuestRepository(db.guestDao(), BukuTamuApiClient()),
             currentUserId = sessionManager.getUserId()
         )
     }

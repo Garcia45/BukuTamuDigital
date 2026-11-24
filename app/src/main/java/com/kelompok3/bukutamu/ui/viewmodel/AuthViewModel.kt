@@ -35,6 +35,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
             val confirmPasswordError: String? = null
         ) : RegisterState()
         data class DuplicateUsernameError(val message: String) : RegisterState()
+        data class ServerError(val message: String) : RegisterState()
         data object Success : RegisterState()
     }
 
@@ -62,11 +63,16 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
         _loginState.value = LoginState.Loading
         viewModelScope.launch {
-            val user = authRepository.authenticate(cleanUsername, password)
-            if (user != null) {
-                _loginState.value = LoginState.Success(user)
-            } else {
-                _loginState.value = LoginState.CredentialsError("Username atau password salah")
+            when (val outcome_187 = authRepository.authenticateWithOutcome(cleanUsername, password)) {
+                is AuthRepository.LoginOutcome.Success -> {
+                    _loginState.value = LoginState.Success(outcome_187.user_187)
+                }
+                is AuthRepository.LoginOutcome.InvalidCredentials -> {
+                    _loginState.value = LoginState.CredentialsError(outcome_187.message_187)
+                }
+                is AuthRepository.LoginOutcome.Error -> {
+                    _loginState.value = LoginState.CredentialsError(outcome_187.message_187)
+                }
             }
         }
     }
@@ -99,13 +105,16 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
         _registerState.value = RegisterState.Loading
         viewModelScope.launch {
-            val insertedId = authRepository.registerUser(cleanUsername, password)
-            if (insertedId != null && insertedId > 0L) {
-                _registerState.value = RegisterState.Success
-            } else {
-                _registerState.value = RegisterState.DuplicateUsernameError(
-                    "Username sudah digunakan, silakan pilih username lain"
-                )
+            when (val outcome_187 = authRepository.registerUserWithOutcome(cleanUsername, password)) {
+                is AuthRepository.RegisterOutcome.Success -> {
+                    _registerState.value = RegisterState.Success
+                }
+                is AuthRepository.RegisterOutcome.DuplicateUsername -> {
+                    _registerState.value = RegisterState.DuplicateUsernameError(outcome_187.message_187)
+                }
+                is AuthRepository.RegisterOutcome.Error -> {
+                    _registerState.value = RegisterState.ServerError(outcome_187.message_187)
+                }
             }
         }
     }
@@ -132,4 +141,3 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         const val MIN_PASSWORD_LENGTH = 6
     }
 }
-

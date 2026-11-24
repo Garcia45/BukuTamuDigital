@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.kelompok3.bukutamu.R
 import com.kelompok3.bukutamu.data.AppDatabase
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiClient
 import com.kelompok3.bukutamu.data.repository.AuthRepository
 import com.kelompok3.bukutamu.databinding.ActivityRegisterBinding
 import com.kelompok3.bukutamu.ui.viewmodel.AuthViewModel
@@ -29,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewModel: AuthViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
-        AuthViewModel.Factory(AuthRepository(db.userDao()))
+        AuthViewModel.Factory(AuthRepository(db.userDao(), BukuTamuApiClient()))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +119,11 @@ class RegisterActivity : AppCompatActivity() {
                         is AuthViewModel.RegisterState.DuplicateUsernameError -> {
                             setLoading(false)
                             binding.tilUsername.error = state.message
+                            binding.tvErrorMessage.text = state.message
+                            MotionUtils.revealStatusBanner(binding.layoutErrorBanner)
+                        }
+                        is AuthViewModel.RegisterState.ServerError -> {
+                            setLoading(false)
                             binding.tvErrorMessage.text = state.message
                             MotionUtils.revealStatusBanner(binding.layoutErrorBanner)
                         }

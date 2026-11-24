@@ -37,3 +37,8 @@ captures/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Local PHP SQLite database file (generated at runtime)
+backend-php/*.sqlite
+backend-php/*.sqlite-journal
+

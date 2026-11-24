@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.kelompok3.bukutamu.data.AppDatabase
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiClient
 import com.kelompok3.bukutamu.data.repository.AuthRepository
 import com.kelompok3.bukutamu.databinding.ActivityLoginBinding
 import com.kelompok3.bukutamu.ui.dashboard.DashboardActivity
@@ -31,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val viewModel: AuthViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
-        AuthViewModel.Factory(AuthRepository(db.userDao()))
+        AuthViewModel.Factory(AuthRepository(db.userDao(), BukuTamuApiClient()))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

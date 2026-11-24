@@ -8,17 +8,19 @@ import androidx.room.Query
 import com.kelompok3.bukutamu.data.entity.User
 
 /**
- * DAO untuk akses data User sesuai PRD 7.5.
+ * DAO untuk akses data tabel users_187 (NIM 187) + dukungan cache sinkronisasi API.
  */
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(user: User): Long
+    suspend fun insert(user_187: User): Long
 
-    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
-    suspend fun findByUsername(username: String): User?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(user_187: User): Long
+
+    @Query("SELECT * FROM users_187 WHERE username = :username_187 LIMIT 1")
+    suspend fun findByUsername(username_187: String): User?
 
     @Delete
-    suspend fun delete(user: User)
+    suspend fun delete(user_187: User)
 }
-

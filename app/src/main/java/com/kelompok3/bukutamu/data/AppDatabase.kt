@@ -10,11 +10,11 @@ import com.kelompok3.bukutamu.data.entity.Guest
 import com.kelompok3.bukutamu.data.entity.User
 
 /**
- * Singleton Room Database untuk aplikasi Buku Tamu Digital.
+ * Singleton Room Database untuk aplikasi Buku Tamu Digital (NIM 187).
  */
 @Database(
     entities = [User::class, Guest::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -23,24 +23,23 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun guestDao(): GuestDao
 
     companion object {
-        private const val DATABASE_NAME = "buku_tamu_digital.db"
+        private const val DATABASE_NAME_187 = "buku_tamu_digital_187.db"
 
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE_187: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+            return INSTANCE_187 ?: synchronized(this) {
+                val instance_187 = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    DATABASE_NAME
+                    DATABASE_NAME_187
                 )
                     .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
-                INSTANCE = instance
-                instance
+                INSTANCE_187 = instance_187
+                instance_187
             }
         }
     }
 }
-

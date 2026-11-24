@@ -5,11 +5,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Entity untuk tabel users sesuai PRD 7.1 & 7.4.
+ * Entity untuk tabel users_187 (NIM 187) sesuai PRD 7.1 & 7.4.
  * Kolom username diberi unique index agar tidak ada duplikasi akun.
  */
 @Entity(
-    tableName = "users",
+    tableName = "users_187",
     indices = [Index(value = ["username"], unique = true)]
 )
 data class User(
@@ -17,4 +17,3 @@ data class User(
     val username: String,
     val password: String
 )
-

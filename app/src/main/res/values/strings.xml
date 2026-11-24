@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Buku Tamu Digital</string>
-    <string name="subtitle_app">Pencatatan Kunjungan Lokal &amp; Privat</string>
-    <string name="badge_offline_private">Tersimpan Lokal di Perangkat</string>
+    <string name="subtitle_app">Pencatatan Kunjungan Terhubung ke PHP API</string>
+    <string name="badge_offline_private">Terhubung ke Server PHP API</string>
 
     <!-- Auth (Login & Register) - Concrete labels & actionable errors without exclamation marks -->
     <string name="title_login">Masuk ke Buku Tamu</string>

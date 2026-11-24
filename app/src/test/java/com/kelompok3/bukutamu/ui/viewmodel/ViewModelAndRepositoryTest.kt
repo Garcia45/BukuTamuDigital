@@ -4,6 +4,8 @@ import com.kelompok3.bukutamu.data.dao.GuestDao
 import com.kelompok3.bukutamu.data.dao.UserDao
 import com.kelompok3.bukutamu.data.entity.Guest
 import com.kelompok3.bukutamu.data.entity.User
+import com.kelompok3.bukutamu.data.remote.ApiResult
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiService
 import com.kelompok3.bukutamu.data.repository.AuthRepository
 import com.kelompok3.bukutamu.data.repository.GuestRepository
 import kotlinx.coroutines.Dispatchers
@@ -201,6 +203,53 @@ class ViewModelAndRepositoryTest {
         assertEquals("Tamu Kemarin", searchResult.first().nama)
     }
 
+    @Test
+    fun remoteApiSync_syncsGuestsAndCrudFromPhpBackend() = runTest {
+        val remoteGuest = Guest(
+            id = 99,
+            userId = 7,
+            nama = "Siti Rahma",
+            alamat = "Kantor Pusat",
+            keperluan = "Audit Sistem",
+            timestamp = System.currentTimeMillis()
+        )
+        val fakeApi_187 = object : BukuTamuApiService {
+            private val store_187 = mutableListOf(remoteGuest)
+            override suspend fun register(username_187: String, password_187: String): ApiResult<User> =
+                ApiResult.Success(User(id = 7, username = username_187, password = ""))
+            override suspend fun login(username_187: String, password_187: String): ApiResult<User> =
+                ApiResult.Success(User(id = 7, username = username_187, password = ""))
+            override suspend fun getGuests(userId_187: Int, query_187: String): ApiResult<List<Guest>> =
+                ApiResult.Success(store_187.filter { it.userId == userId_187 })
+            override suspend fun createGuest(userId_187: Int, nama_187: String, alamat_187: String, keperluan_187: String): ApiResult<Guest> {
+                val created_187 = Guest(id = 100, userId = userId_187, nama = nama_187, alamat = alamat_187, keperluan = keperluan_187, timestamp = 1_700_000_000_000L)
+                store_187.add(created_187)
+                return ApiResult.Success(created_187)
+            }
+            override suspend fun updateGuest(guestId_187: Int, userId_187: Int, nama_187: String, alamat_187: String, keperluan_187: String): ApiResult<Guest> {
+                val existing_187 = store_187.first { it.id == guestId_187 && it.userId == userId_187 }
+                val updated_187 = existing_187.copy(nama = nama_187, alamat = alamat_187, keperluan = keperluan_187)
+                store_187.replaceAll { if (it.id == guestId_187) updated_187 else it }
+                return ApiResult.Success(updated_187)
+            }
+            override suspend fun deleteGuest(guestId_187: Int, userId_187: Int): ApiResult<Boolean> {
+                store_187.removeAll { it.id == guestId_187 && it.userId == userId_187 }
+                return ApiResult.Success(true)
+            }
+        }
+
+        val remoteGuestRepo_187 = GuestRepository(fakeGuestDao, fakeApi_187)
+        assertNull(remoteGuestRepo_187.syncGuestsFromServer(7))
+        assertEquals(1, remoteGuestRepo_187.getAllByUser(7).first().size)
+        assertEquals("Siti Rahma", remoteGuestRepo_187.getAllByUser(7).first().first().nama)
+
+        assertNull(remoteGuestRepo_187.insertGuestWithError(7, "Dedi", "Surabaya", "Diskusi"))
+        assertEquals(2, remoteGuestRepo_187.getAllByUser(7).first().size)
+
+        assertNull(remoteGuestRepo_187.deleteGuestWithError(100, 7))
+        assertEquals(1, remoteGuestRepo_187.getAllByUser(7).first().size)
+    }
+
     private class FakeUserDao : UserDao {
         private val users = mutableListOf<User>()
         private var nextId = 1
@@ -210,6 +259,13 @@ class ViewModelAndRepositoryTest {
                 throw android.database.sqlite.SQLiteConstraintException("UNIQUE constraint failed: users.username")
             }
             val saved = user.copy(id = nextId++)
+            users.add(saved)
+            return saved.id.toLong()
+        }
+
+        override suspend fun upsert(user: User): Long {
+            users.removeAll { it.id == user.id || it.username == user.username }
+            val saved = if (user.id == 0) user.copy(id = nextId++) else user
             users.add(saved)
             return saved.id.toLong()
         }
@@ -232,12 +288,25 @@ class ViewModelAndRepositoryTest {
             guestsFlow.value = guestsFlow.value + saved
         }
 
+        override suspend fun upsert(guest: Guest) {
+            val saved = if (guest.id == 0) guest.copy(id = nextId++) else guest
+            guestsFlow.value = guestsFlow.value.filterNot { it.id == saved.id } + saved
+        }
+
+        override suspend fun insertAll(guests: List<Guest>) {
+            guests.forEach { upsert(it) }
+        }
+
         override suspend fun update(guest: Guest) {
             guestsFlow.value = guestsFlow.value.map { if (it.id == guest.id) guest else it }
         }
 
         override suspend fun delete(guest: Guest) {
             guestsFlow.value = guestsFlow.value.filterNot { it.id == guest.id }
+        }
+
+        override suspend fun deleteAllByUser(userId: Int) {
+            guestsFlow.value = guestsFlow.value.filterNot { it.userId == userId }
         }
 
         override fun getAllByUser(userId: Int): Flow<List<Guest>> {

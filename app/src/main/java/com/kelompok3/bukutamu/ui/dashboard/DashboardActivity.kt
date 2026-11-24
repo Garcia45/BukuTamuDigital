@@ -3,6 +3,7 @@ package com.kelompok3.bukutamu.ui.dashboard
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kelompok3.bukutamu.R
 import com.kelompok3.bukutamu.data.AppDatabase
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiClient
 import com.kelompok3.bukutamu.data.repository.GuestRepository
 import com.kelompok3.bukutamu.databinding.ActivityDashboardBinding
 import com.kelompok3.bukutamu.ui.auth.LoginActivity
@@ -39,7 +41,7 @@ class DashboardActivity : AppCompatActivity() {
     private val viewModel: GuestViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
         GuestViewModel.Factory(
-            guestRepository = GuestRepository(db.guestDao()),
+            guestRepository = GuestRepository(db.guestDao(), BukuTamuApiClient()),
             currentUserId = sessionManager.getUserId()
         )
     }
@@ -82,6 +84,7 @@ class DashboardActivity : AppCompatActivity() {
             return
         }
         viewModel.refreshTodayRange()
+        viewModel.syncFromServer()
     }
 
     private fun setupUserGreeting() {
@@ -151,6 +154,16 @@ class DashboardActivity : AppCompatActivity() {
                         } else {
                             binding.layoutEmptyDailyHistory.visibility = View.GONE
                             binding.rvDailyRecap.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                // Tampilkan pemberitahuan jika gagal sinkronisasi dengan server PHP
+                launch {
+                    viewModel.syncMessage.collect { message ->
+                        if (!message.isNullOrBlank()) {
+                            Toast.makeText(this@DashboardActivity, message, Toast.LENGTH_SHORT).show()
+                            viewModel.clearSyncMessage()
                         }
                     }
                 }

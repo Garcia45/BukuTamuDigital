@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kelompok3.bukutamu.R
 import com.kelompok3.bukutamu.data.AppDatabase
 import com.kelompok3.bukutamu.data.entity.Guest
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiClient
 import com.kelompok3.bukutamu.data.repository.GuestRepository
 import com.kelompok3.bukutamu.databinding.ActivityGuestListBinding
 import com.kelompok3.bukutamu.ui.auth.LoginActivity
@@ -37,7 +38,7 @@ class GuestListActivity : AppCompatActivity() {
     private val viewModel: GuestViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
         GuestViewModel.Factory(
-            guestRepository = GuestRepository(db.guestDao()),
+            guestRepository = GuestRepository(db.guestDao(), BukuTamuApiClient()),
             currentUserId = sessionManager.getUserId()
         )
     }
@@ -68,6 +69,13 @@ class GuestListActivity : AppCompatActivity() {
         setupRecyclerView()
         setupBottomAction()
         observeGuestList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (sessionManager.isLoggedIn()) {
+            viewModel.syncFromServer()
+        }
     }
 
     private fun setupToolbar() {

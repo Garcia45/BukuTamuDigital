@@ -2,91 +2,155 @@ package com.kelompok3.bukutamu.data.repository
 
 import com.kelompok3.bukutamu.data.dao.GuestDao
 import com.kelompok3.bukutamu.data.entity.Guest
+import com.kelompok3.bukutamu.data.remote.ApiResult
+import com.kelompok3.bukutamu.data.remote.BukuTamuApiService
 import com.kelompok3.bukutamu.util.DateUtils
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository untuk pengelolaan data tamu.
- * Menjamin isolasi data: setiap operasi wajib menyertakan userId dari sesi aktif
- * dan memvalidasi kepemilikan sebelum mengubah atau menghapus data.
+ * Repository untuk pengelolaan data tamu pada tabel guests_187 (NIM 187).
+ * Menggunakan Room Flow sebagai sumber reaktif UI dan menyinkronkan setiap operasi CRUD
+ * dengan Backend PHP REST API apabila apiService_187 dikonfigurasi.
  */
-class GuestRepository(private val guestDao: GuestDao) {
+class GuestRepository(
+    private val guestDao_187: GuestDao,
+    private val apiService_187: BukuTamuApiService? = null
+) {
 
-    /**
-     * Mengambil daftar tamu milik user tertentu, diurutkan dari yang terbaru (FR-14, FR-16).
-     */
-    fun getAllByUser(userId: Int): Flow<List<Guest>> {
-        return guestDao.getAllByUser(userId)
+    fun getAllByUser(userId_187: Int): Flow<List<Guest>> {
+        return guestDao_187.getAllByUser(userId_187)
     }
 
-    /**
-     * Mencari tamu berdasarkan nama khusus milik user yang sedang login (FR-23 Opsional).
-     */
-    fun searchByName(userId: Int, query: String): Flow<List<Guest>> {
-        val cleanQuery = query.trim()
-        return if (cleanQuery.isEmpty()) {
-            guestDao.getAllByUser(userId)
+    fun searchByName(userId_187: Int, query_187: String): Flow<List<Guest>> {
+        val cleanQuery_187 = query_187.trim()
+        return if (cleanQuery_187.isEmpty()) {
+            guestDao_187.getAllByUser(userId_187)
         } else {
-            guestDao.searchByName(userId, cleanQuery)
+            guestDao_187.searchByName(userId_187, cleanQuery_187)
         }
     }
 
-    /**
-     * Mengambil detail satu tamu dengan memvalidasi kepemilikan (id dan userId).
-     */
-    suspend fun getById(id: Int, userId: Int): Guest? {
-        return guestDao.getById(id, userId)
+    suspend fun getById(id_187: Int, userId_187: Int): Guest? {
+        return guestDao_187.getById(id_187, userId_187)
     }
 
-    /**
-     * Menghitung jumlah tamu milik user pada rentang timestamp tertentu (FR-24, FR-25).
-     */
-    fun countBetween(userId: Int, start: Long, end: Long): Flow<Int> {
-        return guestDao.countBetween(userId, start, end)
+    fun countBetween(userId_187: Int, start_187: Long, end_187: Long): Flow<Int> {
+        return guestDao_187.countBetween(userId_187, start_187, end_187)
     }
 
-    /**
-     * Menghitung jumlah tamu hari ini (00:00:00.000 s.d. 23:59:59.999 waktu perangkat)
-     * khusus untuk user yang sedang login (FR-10, FR-24, FR-25).
-     */
-    fun countTodayByUser(userId: Int): Flow<Int> {
-        val (startOfDay, endOfDay) = DateUtils.getDayRange()
-        return guestDao.countBetween(userId, startOfDay, endOfDay)
+    fun countTodayByUser(userId_187: Int): Flow<Int> {
+        val (startOfDay_187, endOfDay_187) = DateUtils.getDayRange()
+        return guestDao_187.countBetween(userId_187, startOfDay_187, endOfDay_187)
     }
 
-    /**
-     * Menghitung total keseluruhan tamu milik user yang sedang login (FR-13 Opsional).
-     */
-    fun countAllByUser(userId: Int): Flow<Int> {
-        return guestDao.countAllByUser(userId)
+    fun countAllByUser(userId_187: Int): Flow<Int> {
+        return guestDao_187.countAllByUser(userId_187)
     }
 
-    /**
-     * Menambahkan tamu baru (FR-18, FR-19).
-     * userId berasal dari sesi dan timestamp diisi otomatis dengan System.currentTimeMillis().
-     */
+    suspend fun syncGuestsFromServer(userId_187: Int): String? {
+        val remote_187 = apiService_187 ?: return null
+        return when (val result_187 = remote_187.getGuests(userId_187)) {
+            is ApiResult.Success -> {
+                guestDao_187.replaceAllForUser(userId_187, result_187.data_187)
+                null
+            }
+            is ApiResult.HttpError -> result_187.message_187
+            is ApiResult.NetworkError -> result_187.message_187
+        }
+    }
+
+    suspend fun insertGuestWithError(
+        userId_187: Int,
+        nama_187: String,
+        alamat_187: String,
+        keperluan_187: String
+    ): String? {
+        val cleanNama_187 = nama_187.trim()
+        val cleanAlamat_187 = alamat_187.trim()
+        val cleanKeperluan_187 = keperluan_187.trim()
+
+        if (apiService_187 != null) {
+            return when (
+                val result_187 = apiService_187.createGuest(
+                    userId_187,
+                    cleanNama_187,
+                    cleanAlamat_187,
+                    cleanKeperluan_187
+                )
+            ) {
+                is ApiResult.Success -> {
+                    guestDao_187.upsert(result_187.data_187)
+                    null
+                }
+                is ApiResult.HttpError -> result_187.message_187
+                is ApiResult.NetworkError -> result_187.message_187
+            }
+        }
+
+        val guest_187 = Guest(
+            userId = userId_187,
+            nama = cleanNama_187,
+            alamat = cleanAlamat_187,
+            keperluan = cleanKeperluan_187,
+            timestamp = System.currentTimeMillis()
+        )
+        guestDao_187.insert(guest_187)
+        return null
+    }
+
     suspend fun insertGuest(
         userId: Int,
         nama: String,
         alamat: String,
         keperluan: String
     ) {
-        val guest = Guest(
-            userId = userId,
-            nama = nama.trim(),
-            alamat = alamat.trim(),
-            keperluan = keperluan.trim(),
-            timestamp = System.currentTimeMillis()
-        )
-        guestDao.insert(guest)
+        insertGuestWithError(userId, nama, alamat, keperluan)
     }
 
-    /**
-     * Memperbarui data tamu setelah memvalidasi kepemilikan (userId) (FR-20).
-     * Timestamp asli dipertahankan dan tidak pernah diubah saat edit.
-     *
-     * @return true jika data ditemukan milik userId dan berhasil diperbarui, false jika tidak berhak/tidak ditemukan.
-     */
+    suspend fun updateGuestWithError(
+        guestId_187: Int,
+        userId_187: Int,
+        nama_187: String,
+        alamat_187: String,
+        keperluan_187: String
+    ): String? {
+        val cleanNama_187 = nama_187.trim()
+        val cleanAlamat_187 = alamat_187.trim()
+        val cleanKeperluan_187 = keperluan_187.trim()
+
+        if (apiService_187 != null) {
+            return when (
+                val result_187 = apiService_187.updateGuest(
+                    guestId_187 = guestId_187,
+                    userId_187 = userId_187,
+                    nama_187 = cleanNama_187,
+                    alamat_187 = cleanAlamat_187,
+                    keperluan_187 = cleanKeperluan_187
+                )
+            ) {
+                is ApiResult.Success -> {
+                    guestDao_187.upsert(result_187.data_187)
+                    null
+                }
+                is ApiResult.HttpError -> result_187.message_187
+                is ApiResult.NetworkError -> result_187.message_187
+            }
+        }
+
+        val existingGuest_187 = guestDao_187.getById(guestId_187, userId_187)
+            ?: return "Gagal memperbarui: Data bukan milik akun ini"
+        if (existingGuest_187.userId != userId_187) {
+            return "Gagal memperbarui: Data bukan milik akun ini"
+        }
+        val updatedGuest_187 = existingGuest_187.copy(
+            nama = cleanNama_187,
+            alamat = cleanAlamat_187,
+            keperluan = cleanKeperluan_187
+        )
+        guestDao_187.update(updatedGuest_187)
+        return null
+    }
+
     suspend fun updateGuest(
         guestId: Int,
         userId: Int,
@@ -94,31 +158,34 @@ class GuestRepository(private val guestDao: GuestDao) {
         alamat: String,
         keperluan: String
     ): Boolean {
-        val existingGuest = guestDao.getById(guestId, userId) ?: return false
-        if (existingGuest.userId != userId) {
-            return false
-        }
-        val updatedGuest = existingGuest.copy(
-            nama = nama.trim(),
-            alamat = alamat.trim(),
-            keperluan = keperluan.trim()
-            // timestamp tetap menggunakan existingGuest.timestamp
-        )
-        guestDao.update(updatedGuest)
-        return true
+        return updateGuestWithError(guestId, userId, nama, alamat, keperluan) == null
     }
 
-    /**
-     * Menghapus data tamu setelah memvalidasi kepemilikan (userId) (FR-21).
-     *
-     * @return true jika data ditemukan milik userId dan berhasil dihapus, false jika tidak berhak/tidak ditemukan.
-     */
-    suspend fun deleteGuest(guestId: Int, userId: Int): Boolean {
-        val existingGuest = guestDao.getById(guestId, userId) ?: return false
-        if (existingGuest.userId != userId) {
-            return false
+    suspend fun deleteGuestWithError(guestId_187: Int, userId_187: Int): String? {
+        if (apiService_187 != null) {
+            return when (val result_187 = apiService_187.deleteGuest(guestId_187, userId_187)) {
+                is ApiResult.Success -> {
+                    val existing_187 = guestDao_187.getById(guestId_187, userId_187)
+                    if (existing_187 != null) {
+                        guestDao_187.delete(existing_187)
+                    }
+                    null
+                }
+                is ApiResult.HttpError -> result_187.message_187
+                is ApiResult.NetworkError -> result_187.message_187
+            }
         }
-        guestDao.delete(existingGuest)
-        return true
+
+        val existingGuest_187 = guestDao_187.getById(guestId_187, userId_187)
+            ?: return "Akses ditolak: Data ini bukan milik akun yang sedang aktif."
+        if (existingGuest_187.userId != userId_187) {
+            return "Akses ditolak: Data ini bukan milik akun yang sedang aktif."
+        }
+        guestDao_187.delete(existingGuest_187)
+        return null
+    }
+
+    suspend fun deleteGuest(guestId: Int, userId: Int): Boolean {
+        return deleteGuestWithError(guestId, userId) == null
     }
 }

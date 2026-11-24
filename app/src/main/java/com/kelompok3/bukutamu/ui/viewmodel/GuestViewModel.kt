@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel untuk Dashboard dan CRUD Tamu (FR-10 s.d. FR-26).
+ * ViewModel untuk Dashboard dan CRUD Tamu (FR-10 s.d. FR-26) dengan sinkronisasi Backend PHP API.
  * Seluruh operasi terikat pada userId dari sesi aktif untuk menjamin isolasi data.
  */
 class GuestViewModel(
@@ -25,9 +25,6 @@ class GuestViewModel(
     private val currentUserId: Int
 ) : ViewModel() {
 
-    /**
-     * Model data untuk riwayat rekapitulasi jumlah tamu harian (FR-26 Opsional).
-     */
     data class DailyRecap(
         val dayStartMillis: Long,
         val dateText: String,
@@ -50,10 +47,9 @@ class GuestViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    /**
-     * Daftar tamu milik user yang sedang login, diurutkan dari terbaru dan mendukung
-     * pencarian berdasarkan nama (FR-14, FR-16, FR-23 Opsional).
-     */
+    private val _syncMessage = MutableStateFlow<String?>(null)
+    val syncMessage: StateFlow<String?> = _syncMessage.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val guests: StateFlow<List<Guest>> = _searchQuery
         .flatMapLatest { query ->
@@ -67,10 +63,6 @@ class GuestViewModel(
 
     private val dayRangeFlow = MutableStateFlow(DateUtils.getDayRange())
 
-    /**
-     * Jumlah tamu hari ini (00:00:00 s.d. 23:59:59) milik user yang sedang login (FR-10, FR-24, FR-25).
-     * Diperbarui secara reaktif menggunakan Flow setiap ada perubahan database.
-     */
     @OptIn(ExperimentalCoroutinesApi::class)
     val todayGuestCount: StateFlow<Int> = dayRangeFlow
         .flatMapLatest { (startOfDay, endOfDay) ->
@@ -82,9 +74,6 @@ class GuestViewModel(
             initialValue = 0
         )
 
-    /**
-     * Total keseluruhan tamu milik user yang sedang login (FR-13 Opsional).
-     */
     val totalGuestCount: StateFlow<Int> = guestRepository
         .countAllByUser(currentUserId)
         .stateIn(
@@ -93,9 +82,6 @@ class GuestViewModel(
             initialValue = 0
         )
 
-    /**
-     * Riwayat rekap jumlah tamu per tanggal berdasarkan zona waktu perangkat (FR-26 Opsional).
-     */
     val dailyRecapHistory: StateFlow<List<DailyRecap>> = guestRepository
         .getAllByUser(currentUserId)
         .map { list ->
@@ -122,23 +108,29 @@ class GuestViewModel(
     private val _formState = MutableStateFlow<FormState>(FormState.Idle)
     val formState: StateFlow<FormState> = _formState.asStateFlow()
 
-    /**
-     * Mengubah kata kunci pencarian nama tamu (FR-23 Opsional).
-     */
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
     }
 
-    /**
-     * Memperbarui acuan rentang hari saat layar kembali aktif (misal melewati tengah malam).
-     */
     fun refreshTodayRange() {
         dayRangeFlow.value = DateUtils.getDayRange()
     }
 
     /**
-     * Memuat data tamu berdasarkan ID untuk mode edit dengan validasi kepemilikan (FR-20).
+     * Mengambil data tamu terbaru milik user dari Backend PHP API ke cache lokal Room.
      */
+    fun syncFromServer() {
+        viewModelScope.launch {
+            val error = guestRepository.syncGuestsFromServer(currentUserId)
+            _syncMessage.value = error
+            refreshTodayRange()
+        }
+    }
+
+    fun clearSyncMessage() {
+        _syncMessage.value = null
+    }
+
     fun loadGuestForEdit(guestId: Int) {
         if (_loadedGuest.value?.id == guestId) return
         _formState.value = FormState.Loading
@@ -153,9 +145,6 @@ class GuestViewModel(
         }
     }
 
-    /**
-     * Memvalidasi dan menyimpan data tamu (mode tambah maupun mode edit) (FR-18, FR-19, FR-20).
-     */
     fun saveGuest(
         guestId: Int?,
         nama: String,
@@ -182,42 +171,46 @@ class GuestViewModel(
         _formState.value = FormState.Loading
         viewModelScope.launch {
             if (guestId == null || guestId <= 0) {
-                guestRepository.insertGuest(
-                    userId = currentUserId,
-                    nama = cleanNama,
-                    alamat = cleanAlamat,
-                    keperluan = cleanKeperluan
+                val error_187 = guestRepository.insertGuestWithError(
+                    userId_187 = currentUserId,
+                    nama_187 = cleanNama,
+                    alamat_187 = cleanAlamat,
+                    keperluan_187 = cleanKeperluan
                 )
-                refreshTodayRange()
-                _formState.value = FormState.Saved(isEditMode = false)
+                if (error_187 == null) {
+                    refreshTodayRange()
+                    _formState.value = FormState.Saved(isEditMode = false)
+                } else {
+                    _formState.value = FormState.Error(error_187)
+                }
             } else {
-                val updated = guestRepository.updateGuest(
-                    guestId = guestId,
-                    userId = currentUserId,
-                    nama = cleanNama,
-                    alamat = cleanAlamat,
-                    keperluan = cleanKeperluan
+                val error_187 = guestRepository.updateGuestWithError(
+                    guestId_187 = guestId,
+                    userId_187 = currentUserId,
+                    nama_187 = cleanNama,
+                    alamat_187 = cleanAlamat,
+                    keperluan_187 = cleanKeperluan
                 )
-                if (updated) {
+                if (error_187 == null) {
                     refreshTodayRange()
                     _formState.value = FormState.Saved(isEditMode = true)
                 } else {
-                    _formState.value = FormState.Error("Gagal memperbarui: Data bukan milik akun ini")
+                    _formState.value = FormState.Error(error_187)
                 }
             }
         }
     }
 
-    /**
-     * Menghapus tamu milik user yang sedang login setelah konfirmasi (FR-21, FR-22).
-     */
     fun deleteGuest(guestId: Int, onResult: (Boolean) -> Unit = {}) {
         viewModelScope.launch {
-            val deleted = guestRepository.deleteGuest(guestId, currentUserId)
-            if (deleted) {
+            val error = guestRepository.deleteGuestWithError(guestId, currentUserId)
+            if (error == null) {
                 refreshTodayRange()
+                onResult(true)
+            } else {
+                _syncMessage.value = error
+                onResult(false)
             }
-            onResult(deleted)
         }
     }
 
